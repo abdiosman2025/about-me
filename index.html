@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alex Rivera — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --surface2: #1b1f2b;
+      --border: #252a38;
+      --accent: #c8f564;
+      --accent2: #5d9cf5;
+      --accent3: #f56580;
+      --text: #e8eaf0;
+      --muted: #7a8096;
+      --heading-font: 'Playfair Display', Georgia, serif;
+      --mono-font: 'DM Mono', 'Courier New', monospace;
+      --body-font: 'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body-font);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── SIDEBAR NAV ── */
+    nav {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      z-index: 100;
+    }
+
+    nav a {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      font-family: var(--mono-font);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 8px 0;
+    }
+    nav a:hover { color: var(--accent); }
+    nav a.active { color: var(--accent); }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      margin-left: 72px;
+      max-width: 960px;
+      padding: 80px 64px 120px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 80px;
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .hero-tag {
+      font-family: var(--mono-font);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 32px; height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: var(--heading-font);
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+    }
+
+    h1 .first { display: block; color: var(--text); }
+    h1 .last {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--accent2);
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hero-meta-item .label {
+      font-family: var(--mono-font);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .hero-meta-item .value {
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .summary {
+      max-width: 620px;
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.8;
+      border-left: 2px solid var(--accent);
+      padding-left: 24px;
+    }
+
+    /* ── SECTION STRUCTURE ── */
+    section {
+      margin-bottom: 100px;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .section-label .num {
+      font-family: var(--mono-font);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+    }
+    .section-label h2 {
+      font-family: var(--heading-font);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── COURSES TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background: var(--surface2);
+    }
+
+    th {
+      font-family: var(--mono-font);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 14px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tbody tr {
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: var(--surface2); }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--mono-font);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      padding: 3px 9px;
+      border-radius: 2px;
+      text-transform: uppercase;
+    }
+    .badge-cs { background: rgba(93,156,245,0.15); color: var(--accent2); }
+    .badge-math { background: rgba(245,101,128,0.15); color: var(--accent3); }
+    .badge-se { background: rgba(200,245,100,0.15); color: var(--accent); }
+
+    /* ── SKILLS GRID ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .skill-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 28px;
+    }
+
+    .skill-group-title {
+      font-family: var(--mono-font);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-family: var(--mono-font);
+      font-size: 12px;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--surface2);
+      transition: all 0.15s;
+      cursor: default;
+      border-radius: 2px;
+    }
+    .tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(200,245,100,0.05);
+    }
+
+    /* ── PROJECTS ── */
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .project-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .project-card:hover { border-color: var(--accent2); }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .project-card:hover::before { opacity: 1; }
+
+    .project-number {
+      font-family: var(--mono-font);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      margin-bottom: 12px;
+    }
+
+    .project-name {
+      font-family: var(--heading-font);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .project-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 22px;
+      max-width: 560px;
+    }
+
+    .project-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .project-tech span {
+      font-family: var(--mono-font);
+      font-size: 11px;
+      color: var(--accent2);
+      background: rgba(93,156,245,0.1);
+      border: 1px solid rgba(93,156,245,0.2);
+      padding: 3px 10px;
+      border-radius: 2px;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono-font);
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: gap 0.2s;
+    }
+    .project-link:hover { gap: 12px; }
+    .project-link::after { content: '→'; }
+
+    /* ── LINKS SECTION ── */
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .link-card {
+      border: 1px solid var(--border);
+      padding: 28px;
+      text-decoration: none;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .link-card:hover {
+      border-color: var(--accent);
+      background: rgba(200,245,100,0.04);
+    }
+
+    .link-card .link-icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .link-card .link-type {
+      font-family: var(--mono-font);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .link-card .link-handle {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero > * {
+      animation: fadeUp 0.7s ease both;
+    }
+    .hero-tag        { animation-delay: 0.05s; }
+    h1               { animation-delay: 0.15s; }
+    .hero-meta       { animation-delay: 0.25s; }
+    .summary         { animation-delay: 0.35s; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-family: var(--mono-font);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+    }
+
+    footer .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+      margin-right: 6px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 760px) {
+      nav { display: none; }
+      main { margin-left: 0; padding: 48px 24px 80px; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .links-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#profile">Profile</a>
+    <a href="#courses">Courses</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#links">Links</a>
+  </nav>
+
+  <main>
+
+    <!-- ── A. PROFILE ── -->
+    <section class="hero" id="profile">
+      <div class="hero-tag">Portfolio · 2025</div>
+
+      <h1>
+        <span class="first">Alex</span>
+        <span class="last">Rivera</span>
+      </h1>
+
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="label">Major</span>
+          <span class="value">Computer Science</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="label">University</span>
+          <span class="value">State University of Technology</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="label">Year</span>
+          <span class="value">Junior · Class of 2026</span>
+        </div>
+      </div>
+
+      <p class="summary">
+        I'm a Computer Science student passionate about building software that solves real-world problems.
+        My coursework spans algorithms, web development, and databases, and I enjoy applying these skills
+        through personal and academic projects. I am particularly drawn to full-stack development and
+        data-driven applications, with growing experience in cloud technologies. I thrive in collaborative
+        environments and am actively seeking internship opportunities to expand my impact.
+      </p>
+    </section>
+
+    <!-- ── B. COURSES ── -->
+    <section id="courses">
+      <div class="section-label">
+        <span class="num">01</span>
+        <h2>Courses Taken</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Course Title</th>
+              <th>Code</th>
+              <th>Category</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data Structures &amp; Algorithms</td>
+              <td>CS 201</td>
+              <td><span class="badge badge-cs">Core CS</span></td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>Software Engineering</td>
+              <td>CS 340</td>
+              <td><span class="badge badge-se">Software</span></td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>Database Systems</td>
+              <td>CS 350</td>
+              <td><span class="badge badge-cs">Core CS</span></td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>Web Development</td>
+              <td>CS 360</td>
+              <td><span class="badge badge-se">Software</span></td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>Operating Systems</td>
+              <td>CS 420</td>
+              <td><span class="badge badge-cs">Core CS</span></td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>Computer Networks</td>
+              <td>CS 430</td>
+              <td><span class="badge badge-cs">Core CS</span></td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>Object-Oriented Programming</td>
+              <td>CS 210</td>
+              <td><span class="badge badge-se">Software</span></td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>Discrete Mathematics</td>
+              <td>MATH 220</td>
+              <td><span class="badge badge-math">Math</span></td>
+              <td>Completed</td>
+            </tr>
+            <tr>
+              <td>Machine Learning Fundamentals</td>
+              <td>CS 480</td>
+              <td><span class="badge badge-cs">Core CS</span></td>
+              <td>In Progress</td>
+            </tr>
+            <tr>
+              <td>Cloud Computing</td>
+              <td>CS 460</td>
+              <td><span class="badge badge-se">Software</span></td>
+              <td>In Progress</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── C. SKILLS ── -->
+    <section id="skills">
+      <div class="section-label">
+        <span class="num">02</span>
+        <h2>Technical Skills</h2>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-group">
+          <div class="skill-group-title">Programming Languages</div>
+          <div class="skill-tags">
+            <span class="tag">Java</span>
+            <span class="tag">Python</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">C++</span>
+            <span class="tag">SQL</span>
+            <span class="tag">Bash</span>
+          </div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-title">Technologies &amp; Frameworks</div>
+          <div class="skill-tags">
+            <span class="tag">React</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">Express</span>
+            <span class="tag">HTML5</span>
+            <span class="tag">CSS3</span>
+            <span class="tag">REST APIs</span>
+            <span class="tag">AWS</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">MongoDB</span>
+          </div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-title">Tools &amp; Platforms</div>
+          <div class="skill-tags">
+            <span class="tag">GitHub</span>
+            <span class="tag">VS Code</span>
+            <span class="tag">Docker</span>
+            <span class="tag">IntelliJ IDEA</span>
+            <span class="tag">Postman</span>
+            <span class="tag">Linux</span>
+            <span class="tag">Figma</span>
+          </div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-title">AI Tools</div>
+          <div class="skill-tags">
+            <span class="tag">Claude.ai</span>
+            <span class="tag">GitHub Copilot</span>
+            <span class="tag">ChatGPT</span>
+            <span class="tag">Cursor</span>
+            <span class="tag">Gemini</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── D. PROJECTS ── -->
+    <section id="projects">
+      <div class="section-label">
+        <span class="num">03</span>
+        <h2>Projects</h2>
+      </div>
+
+      <div class="projects-list">
+
+        <div class="project-card">
+          <div class="project-number">Project / 01</div>
+          <div class="project-name">TaskFlow — Task Management App</div>
+          <p class="project-desc">
+            A full-stack productivity web application that allows users to create, organize, and track
+            tasks with real-time updates. Features user authentication, drag-and-drop task boards, 
+            deadline reminders, and a dashboard with progress analytics.
+          </p>
+          <div class="project-tech">
+            <span>React</span>
+            <span>Node.js</span>
+            <span>Express</span>
+            <span>MongoDB</span>
+            <span>JWT Auth</span>
+            <span>CSS3</span>
+          </div>
+          <a href="https://github.com/alexrivera/taskflow" class="project-link">View on GitHub</a>
+        </div>
+
+        <div class="project-card">
+          <div class="project-number">Project / 02</div>
+          <div class="project-name">CampusEats — Campus Food Discovery</div>
+          <p class="project-desc">
+            A location-aware web platform that helps students discover dining options on and around
+            campus, including menus, hours, and user reviews. Integrated Google Maps API for proximity
+            search and built a RESTful backend to serve dynamic content from a PostgreSQL database.
+          </p>
+          <div class="project-tech">
+            <span>JavaScript</span>
+            <span>Python (Flask)</span>
+            <span>PostgreSQL</span>
+            <span>Google Maps API</span>
+            <span>Bootstrap</span>
+          </div>
+          <a href="https://github.com/alexrivera/campuseats" class="project-link">View on GitHub</a>
+        </div>
+
+        <div class="project-card">
+          <div class="project-number">Project / 03</div>
+          <div class="project-name">StockSight — Portfolio Tracker</div>
+          <p class="project-desc">
+            A Python-based command-line and web dashboard application for tracking stock portfolios.
+            Pulls real-time stock data from a financial API, visualizes portfolio performance over time,
+            and generates automated weekly digest emails using AWS SES and Lambda.
+          </p>
+          <div class="project-tech">
+            <span>Python</span>
+            <span>React</span>
+            <span>AWS Lambda</span>
+            <span>AWS SES</span>
+            <span>Chart.js</span>
+            <span>Alpha Vantage API</span>
+          </div>
+          <a href="https://github.com/alexrivera/stocksight" class="project-link">View on GitHub</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── E. PROFESSIONAL LINKS ── -->
+    <section id="links">
+      <div class="section-label">
+        <span class="num">04</span>
+        <h2>Professional Links</h2>
+      </div>
+
+      <div class="links-grid">
+        <a href="https://github.com/alexrivera" class="link-card" target="_blank">
+          <div class="link-icon">⌥</div>
+          <div class="link-type">GitHub</div>
+          <div class="link-handle">github.com/alexrivera</div>
+        </a>
+
+        <a href="https://linkedin.com/in/alexrivera" class="link-card" target="_blank">
+          <div class="link-icon">◈</div>
+          <div class="link-type">LinkedIn</div>
+          <div class="link-handle">linkedin.com/in/alexrivera</div>
+        </a>
+
+        <a href="https://alexrivera.dev" class="link-card" target="_blank">
+          <div class="link-icon">◉</div>
+          <div class="link-type">Portfolio</div>
+          <div class="link-handle">alexrivera.dev</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <span><span class="dot"></span>Alex Rivera · CS Portfolio 2025</span>
+      <span>State University of Technology</span>
+    </footer>
+
+  </main>
+
+</body>
+</html>
